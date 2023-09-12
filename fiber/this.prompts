@@ -1,0 +1,15 @@
+{
+    "prompts": [
+        { 
+            "type": "replace", 
+            "prompt": "Set the http server port: ",
+            "placeholder": "%%APP_PORT%%", 
+            "validate": "numberRange(1024, 65535)" 
+        },
+        {
+            "type": "extend",
+            "prompt": "Do you require server paginate functions to use with MySQL?",
+            "extendFile": "utils.request.extends"
+        }
+    ]
+}

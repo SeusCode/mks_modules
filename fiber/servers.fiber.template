@@ -1,0 +1,63 @@
+
+package servers
+
+import (
+	"%%PACKAGE_NAME%%/src/routes"
+	"encoding/json"
+	"log"
+	"os"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
+)
+
+var FiberApplication *fiber.App
+
+func LoadFiberServer() {
+	// Creating the app
+	FiberApplication = fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+	})
+
+	/**************
+	* MIDDLEWARES *
+	***************/
+
+    // Cors middleware
+	FiberApplication.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+		AllowHeaders:     "Content-Type, Authorization",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
+
+    // Recover middleware
+	FiberApplication.Use(recover.New())
+
+    // Logger middleware
+
+	os.Mkdir("./logs", 0755) // If not exist create logs folder
+
+	file, err := os.OpenFile("./logs/requests.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		defer file.Close()
+		errCreating := os.WriteFile("./logs/requests.log", []byte(""), 0755)
+		if errCreating != nil {
+			log.Fatalf("error opening or creating file: %v", errCreating)
+		}
+	}
+
+	FiberApplication.Use(logger.New(logger.Config{
+		Format: "[${time}] (${status}) - ${ip} | Method: ${method} | Path: ${path} | Latency: ${latency} \n",
+		Output: file,
+	}))
+
+	/*********
+	* ROUTES *
+	**********/
+
+	// Importing routes
+	routes.Setup(FiberApplication)
+}

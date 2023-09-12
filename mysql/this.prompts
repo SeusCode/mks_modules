@@ -1,0 +1,34 @@
+{
+    "prompts": [
+        { 
+            "type": "replace", 
+            "prompt": "Set MySQL server host: ",
+            "placeholder": "%%MYSQL_HOST%%", 
+            "validate": "none" 
+        },
+        { 
+            "type": "replace", 
+            "prompt": "Set MySQL server port: ",
+            "placeholder": "%%MYSQL_PORT%%", 
+            "validate": "numberRange(1024, 65535)" 
+        },
+        { 
+            "type": "replace", 
+            "prompt": "Set MySQL server database name: ",
+            "placeholder": "%%MYSQL_DBNAME%%", 
+            "validate": "none" 
+        },
+        { 
+            "type": "replace", 
+            "prompt": "Set MySQL server user: ",
+            "placeholder": "%%MYSQL_USER%%", 
+            "validate": "none" 
+        },
+        { 
+            "type": "replace", 
+            "prompt": "Set MySQL server password: ",
+            "placeholder": "%%MYSQL_PASS%%", 
+            "validate": "none" 
+        }
+    ]
+}
